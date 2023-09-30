@@ -2,7 +2,7 @@ module.exports = {
   development: {
     client: "pg",
     connection: {
-      user: "postgres",
+      user: "songlu",
       host: "127.0.0.1",
       port: 5432,
       password: "sasa",

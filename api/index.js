@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 const accountRoute = require("./controler/account");
 
 // Use the products route
-app.use("/", accountRoute);
+app.use("/api", accountRoute);
 app.use((req, res, next) => {
   res.end("");
 });

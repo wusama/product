@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const knex = require("../db/database");
 
 router.get("/", async (req, res) => {
-  res.send("api is alive");
+  res.send("api list:<br>/testname {username}<br>/register { username, email, password }<br>/login { username, password }<br>");
 });
 
 router.post("/testname", async (req, res) => {
@@ -54,7 +54,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   // Retrieve user from the database based on username
