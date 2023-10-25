@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import Menus from "../components/Menus";
 export default function Home() {
-  const [todos, setTodos] = useState([
-    { id: 1, name: "todo1", checked: false },
-  ]);
+  const [todos, setTodos] = useState([{ id: 1, name: "todo1", checked: false }]);
   return (
     <div>
       <Menus />

@@ -1,59 +1,109 @@
 import React, { useState } from "react";
 import Menus from "../components/Menus";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import axios from "axios";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { post } from "../lib/http";
 import { Link } from "react-router-dom";
+import Divider from "@mui/material/Divider";
+import { styled } from "@mui/material/styles";
 
-export default function Login() {
-  const [username, setUsername] = useState("");
+type LoginResponse = { token: string; retry: number; isDisable: boolean; user: { name: string } };
+export default function checkName() {
+  const [username, setusername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  return (
-    <div>
-      <Menus />
-      <Typography sx={{ textAlign: "center", mt: 5 }} variant="h3">
-        Login
-      </Typography>
+  const [showPassword, setShowPassword] = React.useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-      <Box sx={{ display: "flex", justifyContent: "center", height: "100vh" }}>
-        <Box sx={{ width: "400px", mt: 5 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Name"
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-          />
-          <TextField
-            sx={{ my: 3 }}
-            fullWidth
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            variant="outlined"
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={() => {
-              axios.post("/api/login", { username, password }).then((res) => {
-                if (res.data.error) {
-                  alert(res.data.error);
-                } else {
-                  alert(res.data.token);
-                }
-              });
-            }}
-          >
-            Login
-          </Button>
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+  const Root = styled("div")(({ theme }) => ({
+    width: "100%",
+    ...theme.typography.body2,
+    "& > :not(style) ~ :not(style)": {
+      marginTop: theme.spacing(2),
+    },
+  }));
+  return (
+    <>
+      <Menus />
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", border: "2px solid pink" }}>
+        <Box>
+          <Paper elevation={3}>
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mb: 3 }}>
+              <Typography variant="h3">Sign In</Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", width: "500px" }}>
+              <TextField
+                sx={{ mb: 2, width: "40ch" }}
+                label="Username"
+                onChange={(e) => {
+                  setusername(e.target.value);
+                }}
+              />
+
+              <TextField
+                sx={{ mb: 2, width: "40ch" }}
+                label="Password"
+                id="standard-adornment-password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                type={showPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword}>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Button
+                sx={{ width: "50ch", mb: 2 }}
+                variant="contained"
+                onClick={() => {
+                  post<LoginResponse>("/api/login", { username, password }).then((res) => {
+                    if (res.error) {
+                      alert(res.error);
+                    } else {
+                      alert(res.message);
+                    }
+                  });
+                }}
+              >
+                Login
+              </Button>
+              <Box sx={{ display: "flex", justifyContent: "center", gap: "50px" }}>
+                <Link to="/P3reg">Register</Link>
+                <Link to="/P3reg">Forget Password</Link>
+              </Box>
+              <Root style={{ margin: "5px 0", fontSize: "184", color: "gray" }}>
+                <Divider> or continue with</Divider>
+              </Root>
+              <Box sx={{ display: "flex", justifyContent: "center", gap: "20px", mb: "10px" }}>
+                <Button sx={{ width: "120px" }} variant="outlined">
+                  Google
+                </Button>
+                <Button sx={{ width: "120px" }} variant="outlined">
+                  FaceBook
+                </Button>
+                <Button sx={{ width: "120px" }} variant="outlined">
+                  X
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
         </Box>
       </Box>
-    </div>
+    </>
   );
 }

@@ -5,12 +5,12 @@ const bcrypt = require("bcrypt");
 const knex = require("../db/database");
 
 router.get("/", async (req, res) => {
-  res.send("api list:<br>/testname {username}<br>/register { username, email, password }<br>/login { username, password }<br>");
+  res.send("api list:<br>/testname {username} => { error?, message? }<br>/register { username, email, password }<br>/login { username, password }<br>");
 });
 
 router.post("/testname", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username } = req.body;
 
     // Check if the user already exists
     const existingUser = await knex("users").where({ username }).first();
@@ -22,7 +22,7 @@ router.post("/testname", async (req, res) => {
     res.json({ message: "OK" });
   } catch (error) {
     console.error(error);
-    res.json({ error: "Internal server error" });
+    res.json({ error: "Internal server error", data: error });
   }
 });
 
