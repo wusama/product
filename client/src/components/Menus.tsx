@@ -15,7 +15,7 @@ export default function Menus() {
         <Link to="/contact">Contact</Link>
       </div>
       <div>
-        <Link to="/P3login">Login</Link>
+        <Link to="/login">Login</Link>
         {/* <Link to="/login">Login</Link> */}
       </div>
     </Paper>

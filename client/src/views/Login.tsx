@@ -8,12 +8,17 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { post } from "../lib/http";
+import http from "../lib/http";
 import { Link } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import { styled } from "@mui/material/styles";
 
-type LoginResponse = { token: string; retry: number; isDisable: boolean; user: { name: string } };
+type LoginResponse = {
+  token: string;
+  retry: number;
+  isDisable: boolean;
+  user: { name: string };
+};
 export default function checkName() {
   const [username, setusername] = useState("");
   const [email, setEmail] = useState("");
@@ -21,7 +26,9 @@ export default function checkName() {
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
   };
   const Root = styled("div")(({ theme }) => ({
@@ -34,13 +41,35 @@ export default function checkName() {
   return (
     <>
       <Menus />
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", border: "2px solid pink" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          border: "2px solid pink",
+        }}
+      >
         <Box>
           <Paper elevation={3}>
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mb: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
               <Typography variant="h3">Sign In</Typography>
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", width: "500px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                width: "500px",
+              }}
+            >
               <TextField
                 sx={{ mb: 2, width: "40ch" }}
                 label="Username"
@@ -60,7 +89,10 @@ export default function checkName() {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword}>
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                      >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
@@ -71,25 +103,42 @@ export default function checkName() {
                 sx={{ width: "50ch", mb: 2 }}
                 variant="contained"
                 onClick={() => {
-                  post<LoginResponse>("/api/login", { username, password }).then((res) => {
-                    if (res.error) {
-                      alert(res.error);
-                    } else {
-                      alert(res.message);
-                    }
-                  });
+                  http
+                    .post<LoginResponse>("/api/login", {
+                      username,
+                      password,
+                    })
+                    .then((res) => {
+                      const { error, token } = res;
+                      if (error) {
+                        alert(error);
+                      } else if (token) {
+                        http.setToken(token);
+                        localStorage.setItem("token", token);
+                        alert("Login succeed");
+                      }
+                    });
                 }}
               >
                 Login
               </Button>
-              <Box sx={{ display: "flex", justifyContent: "center", gap: "50px" }}>
-                <Link to="/P3reg">Register</Link>
+              <Box
+                sx={{ display: "flex", justifyContent: "center", gap: "50px" }}
+              >
+                <Link to="/reg">Register</Link>
                 <Link to="/P3reg">Forget Password</Link>
               </Box>
               <Root style={{ margin: "5px 0", fontSize: "184", color: "gray" }}>
                 <Divider> or continue with</Divider>
               </Root>
-              <Box sx={{ display: "flex", justifyContent: "center", gap: "20px", mb: "10px" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "20px",
+                  mb: "10px",
+                }}
+              >
                 <Button sx={{ width: "120px" }} variant="outlined">
                   Google
                 </Button>

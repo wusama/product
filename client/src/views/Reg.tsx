@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import Menus from "../components/Menus";
-import { post } from "../lib/http";
+import http from "../lib/http";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { isAnEmail, isAnPassword } from "../lib/functions";
@@ -22,6 +22,7 @@ export default function Register() {
   const [usernamefree, setusernameFree] = useState<boolean>();
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const go = useNavigate();
 
   function checkUsername(username: string) {
     if (usernameAlreadlyExist === true) {
@@ -30,7 +31,7 @@ export default function Register() {
     if (usernamefree === true) {
       setusernameFree(undefined);
     }
-    post("/api/testname", { username }).then((res) => {
+    http.post("/api/testname", { username }).then((res) => {
       if (res.error) {
         setusernameAlreadlyExist(true);
       } else if (res.message) {
@@ -42,13 +43,35 @@ export default function Register() {
   return (
     <>
       <Menus />
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", border: "2px solid pink" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          border: "2px solid pink",
+        }}
+      >
         <Box>
           <Paper elevation={3}>
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mb: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
               <Typography variant="h3">Sign Up</Typography>
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", width: "500px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                width: "500px",
+              }}
+            >
               {/* 用户名 */}
               <TextField
                 sx={{ mb: 2, width: "40ch" }}
@@ -66,7 +89,9 @@ export default function Register() {
                   sto = newSto;
                 }}
                 error={usernameAlreadlyExist}
-                helperText={usernameAlreadlyExist ? "Username already exists" : undefined}
+                helperText={
+                  usernameAlreadlyExist ? "Username already exists" : undefined
+                }
               />
               {/* 邮箱 */}
               <TextField
@@ -76,7 +101,9 @@ export default function Register() {
                   const inputEmailError = !isAnEmail(email);
                   setEmailError(inputEmailError);
                 }}
-                onChange={() => {}}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
               {/* 密码 */}
               <TextField
@@ -94,14 +121,32 @@ export default function Register() {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword}>
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                      >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
                 }}
               />
-              <Button sx={{ width: "50ch", mb: 2 }} variant="contained">
+              <Button
+                sx={{ width: "50ch", mb: 2 }}
+                variant="contained"
+                onClick={() => {
+                  http
+                    .post("/api/register", { username, email, password })
+                    .then((res) => {
+                      if (res.message == "OK") {
+                        alert("succeed");
+                        go("/login");
+                      } else {
+                        alert(res.error);
+                      }
+                    });
+                }}
+              >
                 Sign Up
               </Button>
             </Box>
