@@ -22,7 +22,7 @@ const get = function <T>(
   return http
     .get(url, {
       headers: {
-        token: token || undefined,
+        Authorization: token || undefined,
       },
     })
     .then((res) => res.data);

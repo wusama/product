@@ -12,6 +12,9 @@ export default function Menus() {
         <Link to="/about">About</Link>
       </div>
       <div>
+        <Link to="/products">Products</Link>
+      </div>
+      <div>
         <Link to="/contact">Contact</Link>
       </div>
       <div>

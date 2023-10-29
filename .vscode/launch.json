@@ -5,12 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "name": "Debug API",
+      "program": "${workspaceFolder}/api/index.js",
       "request": "launch",
-      "name": "启动程序",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${file}",
-      "outFiles": ["${workspaceFolder}/**/*.js"]
+      "type": "node"
     }
   ]
 }

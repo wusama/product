@@ -6,11 +6,13 @@ import Login from "./views/Login";
 import About from "./views/About";
 import Contact from "./views/Contact";
 import Reg from "./views/Reg";
+import Products from "./views/Products";
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
   { path: "/login", element: <Login /> },
   { path: "/about", element: <About /> },
+  { path: "/products", element: <Products /> },
   { path: "/contact", element: <Contact /> },
   { path: "/reg", element: <Reg /> },
 ]);
